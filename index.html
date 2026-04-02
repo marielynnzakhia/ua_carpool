@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carpool</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+  </head>
+
+  <body>
+    <h1>Student Carpool</h1>
+
+    <div class="container">
+      <!-- FORM -->
+      <div class="form">
+        <h2>Post a Ride</h2>
+        <form id="rideForm">
+          <input
+            id="name"
+            type="text"
+            placeholder="Your Name"
+            autocomplete="name"
+          />
+          <input
+            id="phone"
+            type="tel"
+            placeholder="Phone Number"
+            autocomplete="tel"
+            oninput="validatePhoneInput(this)"
+          />
+          <small id="phoneError"></small>
+
+          <select id="direction" title="Select Direction">
+            <option value="">Select Direction</option>
+            <option value="Home → AU">Home → Antonine University</option>
+            <option value="AU → Home">Antonine University → Home</option>
+          </select>
+
+          <input
+            id="location"
+            type="text"
+            placeholder="Your Area (Home location)"
+            title="Enter your home area"
+            autocomplete="street-address"
+          />
+
+          <div id="locationMap"></div>
+
+          <input
+            id="datetime"
+            type="datetime-local"
+            title="Select departure date and time"
+            autocomplete="off"
+          />
+
+          <input
+            type="number"
+            id="seats"
+            name="seats"
+            min="1"
+            max="6"
+            value="1"
+            placeholder="Available Seats"
+            title="Number of available seats"
+            required
+          />
+
+          <button type="submit">Post Ride</button>
+          <div id="formError" class="error-msg"></div>
+        </form>
+      </div>
+
+      <!-- RIDES -->
+      <div class="rides">
+        <h2>Available Rides</h2>
+        <input
+          id="search"
+          placeholder="Search by location, driver..."
+          oninput="loadRides()"
+        />
+        <select
+          id="filterDirection"
+          onchange="loadRides()"
+          title="Filter by Direction"
+        >
+          <option value="">All Directions</option>
+          <option value="Home → AU">Home → AU</option>
+          <option value="AU → Home">AU → Home</option>
+        </select>
+        <div id="ridesList"></div>
+      </div>
+    </div>
+
+    <!-- Only load script.js once, at the bottom -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

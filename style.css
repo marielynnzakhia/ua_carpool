@@ -1,0 +1,156 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #0a1f44, #0f2f6b);
+  color: white;
+}
+
+h1 {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.form,
+.rides {
+  flex: 1;
+  min-width: 320px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+/* All inputs & selects same width */
+input,
+select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ride {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 10px;
+  transition: 0.2s;
+  position: relative;
+}
+
+.ride:hover {
+  transform: scale(1.02);
+}
+
+.ride button {
+  margin-top: 5px;
+  width: 48%;
+  display: inline-block;
+}
+
+.delete-btn {
+  background: #dc2626;
+}
+
+.delete-btn:hover {
+  background: #ef4444;
+}
+
+.join-btn {
+  background: #16a34a;
+}
+
+.join-btn:hover {
+  background: #22c55e;
+}
+
+.join-btn:disabled {
+  background: #6b7280;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+#error-msg,
+#phoneError,
+#formError {
+  color: #f87171;
+  font-size: 1.2rem;
+  margin: 5px;
+}
+
+#locationMap {
+  width: 100%;
+  height: 250px;
+  margin: 10px 0;
+  border-radius: 8px;
+}
+
+.seats-bar {
+  width: 100%;
+  height: 10px;
+  background: #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 5px 0 10px 0; /* some spacing below the bar */
+}
+
+.seats-fill {
+  height: 100%;
+  background: #4caf50; /* green by default */
+  transition: width 0.3s ease;
+}
+
+.ride.almost-full .seats-fill {
+  background: #ff9800; /* orange if almost full */
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px #feb64a; /* glow effect */
+}
+
+.ride.full .seats-fill {
+  background: #f44336; /* red if full */
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px #fc7066; /* glow effect */
+}
+
+.phone-link {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.phone-link:hover {
+  text-decoration: underline;
+  color: #93c5fd;
+}
