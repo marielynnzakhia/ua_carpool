@@ -132,8 +132,11 @@ async function loadRides() {
   rides = rides.filter((r) => new Date(r.datetime) > new Date());
   rides.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
 
-  const search = document.getElementById("search").value.toLowerCase();
-  const filterDirection = document.getElementById("filterDirection").value;
+  const searchInput = document.getElementById("search");
+  const filterInput = document.getElementById("filterDirection");
+
+  const search = searchInput ? searchInput.value.toLowerCase() : "";
+  const filterDirection = filterInput ? filterInput.value : "";
 
   rides = rides.filter((r) => {
     const combined = `${r.name} ${r.location} ${r.direction}`.toLowerCase();
@@ -144,6 +147,7 @@ async function loadRides() {
   });
 
   const ridesList = document.getElementById("ridesList");
+  if (!ridesList) return;
   ridesList.innerHTML = "";
 
   if (rides.length === 0) {
