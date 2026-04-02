@@ -1,4 +1,8 @@
-const API_URL = "http://localhost:3000/rides";
+fetch("/rides")
+  .then((res) => res.json())
+  .then((data) => console.log(data));
+
+const API_URL = window.location.origin + "/rides";
 
 // assign a persistent user ID in localStorage
 let userId = localStorage.getItem("userId");
@@ -262,22 +266,19 @@ async function deleteRide(ride, messageDiv) {
   }
 }
 
-async function joinRide(ride, userId) {
+async function joinRide(ride, userId, messageDiv) {
   if (!userId) return;
 
-  // Check if user is the driver
   if (userId === ride.driverId || userId === ride.name) {
     messageDiv.textContent = "You cannot join your own ride!";
     return;
   }
 
-  // Check if user already joined
   if (ride.passengers?.includes(userId)) {
     messageDiv.textContent = "You already joined this ride!";
     return;
   }
 
-  // Check if seats are full
   if ((ride.passengers?.length || 0) >= ride.seats) {
     messageDiv.textContent = "Ride is full!";
     return;
@@ -291,15 +292,16 @@ async function joinRide(ride, userId) {
     });
 
     const data = await res.json();
+
     if (res.status !== 200) {
-      messageDiv.textContent = data.error; // show server error
+      messageDiv.textContent = data.error || "Join failed";
       return;
     }
 
     messageDiv.textContent = "Joined successfully!";
-    loadRides(); // Refresh rides
+    loadRides();
   } catch (err) {
-    messageDiv.textContent = "Failed to join ride. Try again.";
+    messageDiv.textContent = "Server error. Try again.";
   }
 }
 
