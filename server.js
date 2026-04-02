@@ -81,31 +81,22 @@ async function deleteExpiredRides() {
 /* 📥 GET RIDES (sorted + cleaned) */
 app.get("/rides", async (req, res) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ error: "Database not connected" });
+    }
+
+    await deleteExpiredRides(); // remove expired rides first
     const rides = await Ride.find().sort({ datetime: 1 });
     res.json(rides);
   } catch (err) {
     res.status(500).json({ error: "Failed to fetch rides" });
   }
-  try {
-    // Try block for GET
-    if (mongoose.connection.readyState !== 1) {
-      // Validate DB connection
-      return res.status(503).json({ error: "Database not connected" }); // Return error if down
-    } // Close if
-
-    await deleteExpiredRides(); // Trigger cleanup of old rides
-
-    const rides = await Ride.find().sort({ datetime: 1 }); // Query and sort rides
-    res.json(rides); // Send results back to client
-  } catch (err) {
-    // Catch server errors
-    res.status(500).json({ error: "Failed to fetch rides" }); // Return server error
-  } // Close catch
-}); // Close route
+});
 
 /* 📤 POST RIDE */
 app.post("/rides", async (req, res) => {
   // Create ride endpoint
+  console.log("New ride data:", req.body);
   try {
     // Try block for POST
     if (mongoose.connection.readyState !== 1) {
