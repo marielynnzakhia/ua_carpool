@@ -148,11 +148,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.listen(PORT, () => {
-  // Start listening for requests
-  console.log(`Server running on http://localhost:${PORT}`); // Log start message
-}); // Close listener
-
 // DELETE RIDE
 app.delete("/rides/:id", async (req, res) => {
   try {
