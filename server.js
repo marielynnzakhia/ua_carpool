@@ -4,7 +4,7 @@ const bodyParser = require("body-parser"); // Import body-parser to handle JSON
 const mongoose = require("mongoose"); // Import Mongoose for MongoDB
 
 const app = express(); // Initialize Express app
-const PORT = 3000; // Define server port
+const PORT = process.env.PORT || 3000; // Define server port
 
 app.use(cors()); // Enable Cross-Origin Resource Sharing
 app.use(bodyParser.json()); // Configure app to parse JSON bodies
@@ -138,6 +138,16 @@ app.patch("/rides/:id", async (req, res) => {
   }
 });
 
+const path = require("path");
+
+// Serve all static files (index.html, style.css, script.js)
+app.use(express.static(path.join(__dirname)));
+
+// Root route to serve index.html
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "index.html"));
+});
+
 app.listen(PORT, () => {
   // Start listening for requests
   console.log(`Server running on http://localhost:${PORT}`); // Log start message
@@ -179,4 +189,8 @@ app.patch("/rides/:id/join", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: "Join failed" });
   }
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
