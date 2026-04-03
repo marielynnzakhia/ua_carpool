@@ -215,7 +215,7 @@ async function loadRides() {
     div.innerHTML = `
     <p><strong>${ride.direction}</strong></p>
     <p>Location: ${ride.location}</p>
-    <p>📅 ${formattedDate}</p>
+    <p>Date: ${formattedDate}</p>
     <p>⏳ ${timeRemaining(ride.datetime)}</p>
     <p>Seats: ${currentPassengers} / ${totalSeats}</p>
     <div class="seats-bar">

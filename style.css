@@ -28,7 +28,6 @@ h1 {
   backdrop-filter: blur(10px);
 }
 
-/* All inputs & selects same width */
 input,
 select {
   width: 100%;
@@ -38,6 +37,20 @@ select {
   border-radius: 6px;
   border: none;
   font-size: 1rem;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 12px;
+  margin: 6px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  background-color: #0a1f44; /* match your dark theme */
+  color: white;
+  box-sizing: border-box;
 }
 
 button {
@@ -194,4 +207,29 @@ button:disabled {
 a:-webkit-any-link {
   color: #60a5fa;
   cursor: pointer;
+}
+
+/* 🔥 specifically fix datetime input */
+input[type="datetime-local"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #0a1f44;
+  color: white;
+  padding: 12px;
+}
+
+/* Fix weird right-side spacing on mobile */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+  filter: invert(1); /* makes icon white */
+  opacity: 0.8;
+}
+
+input[type="datetime-local"] {
+  height: 48px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.4);
 }
