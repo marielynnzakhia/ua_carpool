@@ -17,17 +17,23 @@ let selectedCoordinates = null;
 function formatPhone(phone) {
   if (!phone) return "";
 
-  // remove spaces, dashes, etc.
-  const clean = phone.replace(/[^\d+]/g, "");
+  // remove everything except digits
+  let clean = phone.replace(/\D/g, "");
 
-  // Lebanese format: +961XXXXXXXX
-  if (clean.startsWith("+961") && clean.length === 12) {
-    return clean.replace(/(\+961)(\d{2})(\d{3})(\d{3})/, "$1 $2 $3 $4");
+  // Lebanese numbers (8 digits)
+  if (clean.length === 8) {
+    // add country code
+    clean = "961" + clean;
   }
 
-  // Lebanese local format: 03XXXXXX or 71XXXXXX etc.
-  if (/^0\d{7}$/.test(clean)) {
-    return clean.replace(/(0\d)(\d{3})(\d{3})/, "$1 $2 $3");
+  // If starts with 0 and is 9 digits → remove 0 and add 961
+  if (clean.length === 9 && clean.startsWith("0")) {
+    clean = "961" + clean.slice(1);
+  }
+
+  // Now format +961XXXXXXXX
+  if (clean.startsWith("961") && clean.length === 11) {
+    return clean.replace(/(961)(\d{2})(\d{3})(\d{3})/, "+$1 $2 $3 $4");
   }
 
   // fallback: just group digits nicely
@@ -116,12 +122,31 @@ function validateRide(ride) {
 function timeRemaining(datetime) {
   const now = new Date();
   const rideTime = new Date(datetime);
-  const diff = rideTime - now;
+  let diff = rideTime - now;
+
   if (diff <= 0) return "Expired";
+
   const minutes = Math.floor(diff / 60000);
-  if (minutes < 60) return `${minutes} min`;
   const hours = Math.floor(minutes / 60);
-  return `${hours} hr`;
+  const days = Math.floor(hours / 24);
+  const months = Math.floor(days / 30);
+
+  const remMinutes = minutes % 60;
+  const remHours = hours % 24;
+  const remDays = days % 30;
+
+  // build clean string
+  let parts = [];
+
+  if (months > 0) parts.push(`${months} mo`);
+  if (remDays > 0) parts.push(`${remDays} d`);
+  if (remHours > 0) parts.push(`${remHours} hr`);
+  if (remMinutes > 0) parts.push(`${remMinutes} min`);
+
+  // 🔥 fix ugly "0 min"
+  if (parts.length === 0) return "Less than a minute";
+
+  return parts.join(" ") + " left";
 }
 
 // ------------------ LOAD RIDES ------------------
@@ -171,11 +196,27 @@ async function loadRides() {
     if (remainingSeats <= 0) div.classList.add("full");
     else if (remainingSeats === 1) div.classList.add("almost-full");
 
+    const formattedDate = date.toLocaleString([], {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const rawPhone = ride.phone.replace(/\D/g, "");
+
+    // normalize for calling
+    let callPhone = rawPhone;
+    if (rawPhone.length === 8) callPhone = "961" + rawPhone;
+    if (rawPhone.length === 9 && rawPhone.startsWith("0"))
+      callPhone = "961" + rawPhone.slice(1);
+
     div.innerHTML = `
     <p><strong>${ride.direction}</strong></p>
     <p>Location: ${ride.location}</p>
-    <p>Date: ${date.toLocaleString()}</p>
-    <p>⏳ Expires in: ${timeRemaining(ride.datetime)}</p>
+    <p>📅 ${formattedDate}</p>
+    <p>⏳ ${timeRemaining(ride.datetime)}</p>
     <p>Seats: ${currentPassengers} / ${totalSeats}</p>
     <div class="seats-bar">
       <div class="seats-fill" style="width: ${Math.floor(
@@ -184,7 +225,7 @@ async function loadRides() {
     </div>
     <p>Driver: ${ride.name}</p>
     <p>Phone: 
-    <a href="tel:${ride.phone.replace(/[^\d+]/g, "")}" class="phone-link">
+    <a href="tel:+${callPhone}" class="phone-link">
     ${formatPhone(ride.phone)}
     </a>
     </p>

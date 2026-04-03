@@ -154,3 +154,44 @@ button:disabled {
   text-decoration: underline;
   color: #93c5fd;
 }
+
+.ride p {
+  margin: 4px 0;
+  word-wrap: break-word;
+}
+
+.ride {
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .ride {
+    font-size: 13px;
+    padding: 10px;
+  }
+
+  .ride p {
+    font-size: 13px;
+  }
+
+  .seats-bar {
+    height: 6px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 5px;
+  }
+}
+.ride p:nth-child(3) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+a:-webkit-any-link {
+  color: #60a5fa;
+  cursor: pointer;
+}
