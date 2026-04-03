@@ -196,10 +196,7 @@ async function loadRides() {
 
     const currentPassengers = ride.passengers?.length || 0;
 
-    // cap total seats to 6 visually (even if DB has more)
-    const totalSeats = Math.min(currentPassengers + ride.seats, 6);
-
-    // remaining seats based on capped total
+    const totalSeats = ride.seats; // actual seats in DB
     const remainingSeats = totalSeats - currentPassengers;
 
     div.className = "ride"; // reset class
@@ -229,9 +226,10 @@ async function loadRides() {
     <p>⏳ ${timeRemaining(ride.datetime)}</p>
     <p>Seats: ${currentPassengers} / ${totalSeats}</p>
     <div class="seats-bar">
-      <div class="seats-fill" style="width: ${Math.floor(
-        (currentPassengers / totalSeats) * 100,
-      )}%"></div>
+    <div class="seats-fill" style="width: ${Math.min(
+      (currentPassengers / totalSeats) * 100,
+      100,
+    )}%"></div>
     </div>
     <p>Driver: ${ride.name}</p>
     <p>Phone: 
