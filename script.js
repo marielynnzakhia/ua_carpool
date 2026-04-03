@@ -251,7 +251,7 @@ async function loadRides() {
     div.querySelector(".join-btn").addEventListener("click", () => {
       const userId = localStorage.getItem("userId");
 
-      if (userId === ride.driverId || userId === ride.name) {
+      if (userId === ride.driverId) {
         messageDiv.textContent = "You cannot join your own ride!";
         return;
       }
@@ -331,7 +331,7 @@ async function joinRide(ride, userId, messageDiv) {
     return;
   }
 
-  if ((ride.passengers?.length || 0) >= ride.seats) {
+  if (ride.seats <= 0) {
     messageDiv.textContent = "Ride is full!";
     return;
   }
