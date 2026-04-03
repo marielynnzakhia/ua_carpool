@@ -11,6 +11,12 @@ if (!userId) {
   localStorage.setItem("userId", userId);
 }
 
+const datetimeInput = document.getElementById("datetime").value;
+if (!datetimeInput) {
+  document.getElementById("formError").textContent = "Select date & time";
+  return;
+}
+
 // Parse a "YYYY-MM-DDTHH:MM" string as local time (avoids 3h shift)
 function parseLocalDate(input) {
   const [datePart, timePart] = input.split("T");
@@ -195,9 +201,8 @@ async function loadRides() {
     const div = document.createElement("div");
 
     const currentPassengers = ride.passengers?.length || 0;
-
-    const totalSeats = ride.seats; // actual seats in DB
-    const remainingSeats = totalSeats - currentPassengers;
+    const remainingSeats = ride.seats;
+    const totalSeats = currentPassengers + remainingSeats;
 
     div.className = "ride"; // reset class
     if (remainingSeats <= 0) div.classList.add("full");
@@ -250,7 +255,7 @@ async function loadRides() {
 
     // JOIN button logic
     div.querySelector(".join-btn").addEventListener("click", () => {
-      const userId = localStorage.getItem("userId");
+      const userId = userId;
 
       if (userId === ride.driverId || userId === ride.name) {
         messageDiv.textContent = "You cannot join your own ride!";
@@ -332,7 +337,7 @@ async function joinRide(ride, userId, messageDiv) {
     return;
   }
 
-  if ((ride.passengers?.length || 0) >= ride.seats) {
+  if (ride.seats <= 0) {
     messageDiv.textContent = "Ride is full!";
     return;
   }
