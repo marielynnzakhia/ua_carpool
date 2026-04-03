@@ -11,6 +11,16 @@ if (!userId) {
   localStorage.setItem("userId", userId);
 }
 
+// Parse a "YYYY-MM-DDTHH:MM" string as local time (avoids 3h shift)
+function parseLocalDate(input) {
+  const [datePart, timePart] = input.split("T");
+  const [year, month, day] = datePart.split("-").map(Number);
+  const [hour, minute] = timePart.split(":").map(Number);
+  return new Date(year, month - 1, day, hour, minute); // month is 0-indexed
+}
+
+// ---------------------- MAP ----------------------
+
 let map, marker;
 let selectedCoordinates = null;
 
@@ -362,19 +372,20 @@ document.getElementById("rideForm").addEventListener("submit", async (e) => {
     phone: document.getElementById("phone").value.trim(),
     direction: document.getElementById("direction").value,
     location: document.getElementById("location").value.trim(),
-    datetime: document.getElementById("datetime").value,
+    datetime: parseLocalDate(
+      document.getElementById("datetime").value,
+    ).toISOString(),
     seats: parseInt(document.getElementById("seats").value),
     driverId: driverId,
     passengers: [], // track who joined
   };
 
-  const rideDate = new Date(document.getElementById("datetime").value);
+  const rideDate = parseLocalDate(document.getElementById("datetime").value);
   if (rideDate < new Date()) {
     document.getElementById("formError").textContent =
       "Date & time cannot be in the past!";
     return;
   }
-
   const error = validateRide(ride);
   if (error) {
     document.getElementById("formError").textContent = error;
